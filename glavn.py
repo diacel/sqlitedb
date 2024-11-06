@@ -23,29 +23,44 @@ def authenticate_user(username, password):
 
 def main():
     while True:
-        print("\n1. Регистрация")
-        print("2. Вход")
-        print("3. Выход")
+        print("\n1. Вход")
+        print("2. Выход")
         choice = input("Выберите действие: ")
 
         if choice == '1':
             username = input("Введите имя пользователя: ")
             password = input("Введите пароль: ")
-            role = input("Введите роль (администратор/сотрудник): ")
-            register_user(username, password, role)
-        elif choice == '2':
-            username = input("Введите имя пользователя: ")
-            password = input("Введите пароль: ")
             user = authenticate_user(username, password)
             if user:
                 print(f"Добро пожаловать, {user[1]}!")
-                if user[3] == 'администратор':
+                if user[3] == 'admin':
                     admin_menu()
+                elif user[3] == 'super_admin':
+                    super_admin_menu()
                 else:
                     employee_menu()
             else:
                 print("Неверное имя пользователя или пароль.")
+        elif choice == '2':
+            break
+        else:
+            print("Неверный выбор. Попробуйте снова.")
+
+def super_admin_menu():
+    while True:
+        print("\n1. Просмотреть данные")
+        print("2. Редактировать данные")
+        print("3. Зарегистрировать новый аккаунт")
+        print("4. Выход")
+        choice = input("Выберите действие: ")
+
+        if choice == '1':
+            super_view_data()
+        elif choice == '2':
+            super_edit_data()
         elif choice == '3':
+            register_user()
+        elif choice == '4':
             break
         else:
             print("Неверный выбор. Попробуйте снова.")
@@ -248,6 +263,69 @@ def edit_table(table):
             print("Неверный выбор. Попробуйте снова.")
         
         input("\nНажмите Enter для продолжения...")
+
+def super_view_data():
+    tables = ['users', 'driver', 'vehicle', 'violation', 'insurance', 'maintenance']
+    
+    while True:
+        print("\nДоступные таблицы:")
+        for i, table in enumerate(tables, 1):
+            print(f"{i}. {table}")
+        print("0. Вернуться в главное меню")
+        
+        choice = input("Выберите номер таблицы для просмотра (или 0 для выхода): ")
+        
+        if choice == '0':
+            break
+        
+        try:
+            table_index = int(choice) - 1
+            if 0 <= table_index < len(tables):
+                table = tables[table_index]
+                
+                print(f"\nТаблица: {table}")
+                
+                # Получаем заголовки столбцов
+                cur.execute(f"PRAGMA table_info({table})")
+                headers = [col[1] for col in cur.fetchall()]
+                
+                # Получаем данные
+                cur.execute(f"SELECT * FROM {table}")
+                data = cur.fetchall()
+                
+                # Выводим данные в виде таблицы
+                print(tabulate(data, headers=headers, tablefmt="grid"))
+                
+                input("Нажмите Enter для продолжения...")
+            else:
+                print("Неверный номер таблицы. Попробуйте снова.")
+        except ValueError:
+            print("Пожалуйста, введите число.")
+
+def super_edit_data():
+    tables = ['users', 'driver', 'vehicle', 'violation', 'insurance', 'maintenance']
+    
+    while True:
+        print("\nРедактирование данных")
+        print("\nДоступные таблицы:")
+        for i, table in enumerate(tables, 1):
+            print(f"{i}. {table}")
+        print("0. Вернуться в главное меню")
+        
+        choice = input("Выберите номер таблицы для редактирования (или 0 для выхода): ")
+        
+        if choice == '0':
+            break
+            
+        try:
+            table_index = int(choice) - 1
+            if 0 <= table_index < len(tables):
+                table = tables[table_index]
+                edit_table(table)
+            else:
+                print("Неверный номер таблицы. Попробуйте снова.")
+        except ValueError:
+            print("Пожалуйста, введите число.")
 
 if __name__ == "__main__":
     main()
