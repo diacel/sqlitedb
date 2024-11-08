@@ -59,7 +59,30 @@ def super_admin_menu():
         elif choice == '2':
             super_edit_data()
         elif choice == '3':
-            register_user()
+            username = input("Введите имя пользователя: ")
+            password = input("Введите пароль: ")
+            
+            while True:
+                print("\nВыберите роль:")
+                print("1. admin")
+                print("2. super_admin")
+                print("3. employee")
+                role_choice = input("Введите номер роли: ")
+                
+                if role_choice == '1':
+                    role = 'admin'
+                    break
+                elif role_choice == '2':
+                    role = 'super_admin'
+                    break
+                elif role_choice == '3':
+                    role = 'employee'
+                    break
+                else:
+                    print("Неверный выбор. Попробуйте снова.")
+            
+            register_user(username, password, role)
+        
         elif choice == '4':
             break
         else:
@@ -115,15 +138,12 @@ def view_data():
                 
                 print(f"\nТаблица: {table}")
                 
-                # Получаем заголовки столбцов
                 cur.execute(f"PRAGMA table_info({table})")
                 headers = [col[1] for col in cur.fetchall()]
                 
-                # Получаем данные
                 cur.execute(f"SELECT * FROM {table}")
                 data = cur.fetchall()
                 
-                # Выводим данные в виде таблицы
                 print(tabulate(data, headers=headers, tablefmt="grid"))
                 
                 input("Нажмите Enter для продолжения...")
@@ -171,7 +191,6 @@ def edit_table(table):
         if choice == '0':
             break
         elif choice == '1':
-            # Показать текущие данные
             cur.execute(f"PRAGMA table_info({table})")
             headers = [col[1] for col in cur.fetchall()]
             cur.execute(f"SELECT * FROM {table}")
@@ -179,18 +198,17 @@ def edit_table(table):
             print(tabulate(data, headers=headers, tablefmt="grid"))
         
         elif choice == '2':
-            # Добавить новую запись
             cur.execute(f"PRAGMA table_info({table})")
             columns = cur.fetchall()
             values = []
             
             print("\nВведите значения для новой записи:")
-            for col in columns[1:]:  # Пропускаем id (автоинкремент)
+            for col in columns[1:]:
                 col_name = col[1]
                 col_type = col[2]
                 while True:
                     value = input(f"{col_name} ({col_type}): ")
-                    if value.strip():  # Проверка на пустое значение
+                    if value.strip(): 
                         values.append(value)
                         break
                     print("Значение не может быть пустым!")
@@ -206,7 +224,6 @@ def edit_table(table):
                 print(f"Ошибка при добавлении записи: {e}")
         
         elif choice == '3':
-            # Изменить существующую запись
             id_to_edit = input("Введите ID записи для редактирования: ")
             try:
                 cur.execute(f"SELECT * FROM {table} WHERE id = ?", (id_to_edit,))
@@ -219,7 +236,7 @@ def edit_table(table):
                     values = []
                     
                     print("\nВведите новые значения (оставьте пустым, чтобы не менять):")
-                    for i, col in enumerate(columns[1:], 1):  # Пропускаем id
+                    for i, col in enumerate(columns[1:], 1):
                         col_name = col[1]
                         current_value = record[i]
                         new_value = input(f"{col_name} (текущее значение: {current_value}): ")
@@ -229,7 +246,7 @@ def edit_table(table):
                             values.append(new_value)
                     
                     if updates:
-                        values.append(id_to_edit)  # Добавляем id для WHERE условия
+                        values.append(id_to_edit) 
                         update_query = f"UPDATE {table} SET {', '.join(updates)} WHERE id = ?"
                         cur.execute(update_query, values)
                         ton.commit()
@@ -242,7 +259,6 @@ def edit_table(table):
                 print(f"Ошибка при обновлении записи: {e}")
         
         elif choice == '4':
-            # Удалить запись
             id_to_delete = input("Введите ID записи для удаления: ")
             try:
                 cur.execute(f"SELECT * FROM {table} WHERE id = ?", (id_to_delete,))
@@ -285,15 +301,12 @@ def super_view_data():
                 
                 print(f"\nТаблица: {table}")
                 
-                # Получаем заголовки столбцов
                 cur.execute(f"PRAGMA table_info({table})")
                 headers = [col[1] for col in cur.fetchall()]
                 
-                # Получаем данные
                 cur.execute(f"SELECT * FROM {table}")
                 data = cur.fetchall()
                 
-                # Выводим данные в виде таблицы
                 print(tabulate(data, headers=headers, tablefmt="grid"))
                 
                 input("Нажмите Enter для продолжения...")
