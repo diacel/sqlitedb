@@ -21,6 +21,7 @@ def authenticate_user(username, password):
     user = cur.fetchone()
     return user
 
+
 def main():
     while True:
         print("\n1. Вход")
@@ -32,7 +33,7 @@ def main():
             password = input("Введите пароль: ")
             user = authenticate_user(username, password)
             if user:
-                print(f"Добро пожаловать, {user[1]}!")
+                print(f"Добро пожаловать в функциональный режим, {user[1]}!")
                 if user[3] == 'admin':
                     admin_menu()
                 elif user[3] == 'super_admin':
