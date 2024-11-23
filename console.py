@@ -56,9 +56,7 @@ def sql_interface():
             continue
         
         try:
-            # Выполняем команду
             cur.execute(sql_command)
-            # Если команда является SELECT, выводим результаты
             if sql_command.strip().upper().startswith("SELECT"):
                 results = cur.fetchall()
                 headers = [description[0] for description in cur.description]
@@ -81,16 +79,16 @@ def show_tables():
 
 def print_help():
     help_text = """
-Доступные команды:
-1. SELECT * FROM <таблица> - Просмотр всех записей из указанной таблицы.
-2. INSERT INTO <таблица> (...) VALUES (...) - Добавление новой записи.
-3. UPDATE <таблица> SET <поля> WHERE <условие> - Обновление записи.
-4. DELETE FROM <таблица> WHERE <условие> - Удаление записи.
-5. CREATE TABLE <имя таблицы> (...) - Создание новой таблицы.
-6. DROP TABLE <имя таблицы> - Удаление таблицы.
-7. HELP - Показать список доступных команд.
-8. EXIT - Выход из интерфейса SQL.
-"""
+    Доступные команды:
+    1. SELECT * FROM <таблица> - Просмотр всех записей из указанной таблицы.
+    2. INSERT INTO <таблица> (...) VALUES (...) - Добавление новой записи.
+    3. UPDATE <таблица> SET <поля> WHERE <условие> - Обновление записи.
+    4. DELETE FROM <таблица> WHERE <условие> - Удаление записи.
+    5. CREATE TABLE <имя таблицы> (...) - Создание новой таблицы.
+    6. DROP TABLE <имя таблицы> - Удаление таблицы.
+    7. HELP - Показать список доступных команд.
+    8. EXIT - Выход из интерфейса SQL.
+    """
     print(help_text)
 
 if __name__ == "__main__":
