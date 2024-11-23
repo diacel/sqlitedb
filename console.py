@@ -48,7 +48,7 @@ def sql_interface():
         
         if sql_command.lower() == 'выход':
             break
-        elif sql_command.lower() == 'help':
+        elif sql_command.lower() == 'негр':
             print_help()
             continue
         elif sql_command.strip().lower() == 'select *':
@@ -86,8 +86,7 @@ def print_help():
     4. DELETE FROM <таблица> WHERE <условие> - Удаление записи.
     5. CREATE TABLE <имя таблицы> (...) - Создание новой таблицы.
     6. DROP TABLE <имя таблицы> - Удаление таблицы.
-    7. HELP - Показать список доступных команд.
-    8. EXIT - Выход из интерфейса SQL.
+    7. EXIT - Выход из интерфейса SQL.
     """
     print(help_text)
 
